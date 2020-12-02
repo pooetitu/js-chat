@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat test</title>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="chatbox"></div>
+      <form id="form">
+        <input id="usermsg" type="text" />
+        <button id="submit">send</button>
+      </form>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      socket.on("message", (data) => {
+        console.log(data);
+      });
+      document.getElementById("submit").addEventListener("click", (event) => {
+        event.preventDefault();
+        if (document.getElementById("usermsg").value != "") {
+          socket.emit("message", document.getElementById("usermsg").value);
+          document.getElementById("usermsg").value = "";
+        }
+      });
+    </script>
+    <style>
+      #chatbox {
+        text-align: left;
+        margin: 0 auto;
+        margin-bottom: 25px;
+        padding: 10px;
+        background: #fff;
+        max-height: 100px;
+        width: 430px;
+        border: 1px solid #acd8f0;
+        overflow: auto;
+      }
+      #wrapper {
+        margin: 0 auto;
+        padding-bottom: 25px;
+        background: #ebf4fb;
+        width: 504px;
+        border: 1px solid #acd8f0;
+      }
+      #usermsg {
+        width: 395px;
+        border: 1px solid #acd8f0;
+      }
+    </style>
+  </body>
+</html>
