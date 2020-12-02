@@ -1,26 +1,19 @@
-const express = require("express"),
-  ws = require("ws"),
-  http = require("http"),
-  app = express();
-// use express static to deliver resources HTML, CSS, JS, etc)
-// from the public folder
-app.use(express.static("public"));
-var httpServer = http.createServer(null, app).listen(3000);
-console.log("The HTTP server is up and running");
+var app = require("express")();
+var http = require("http").createServer(app);
+var io = require("socket.io")(http);
 
-var wss = new ws.Server({ server: httpServer });
-var clientList = [];
+app.get("/", (request, response) => {
+  response.sendFile(__dirname + "\\app\\index.html");
+});
 
-wss.on("connection", function (client) {
-  clientList.push(client);
-  client.on("message", function (event) {
-    message = JSON.parse(event);
-    wss.broadcast = () => {
-      clientList.forEach(function (client) {
-        client.send(message);
-      });
-    };
-    console.log(message.text);
+io.on("connection", (socket) => {
+  console.log("User connected");
+  socket.on("message", (data) => {
+    console.log(data);
+    socket.broadcast.emit("message", data);
   });
-  console.log("A new client was connected.");
+});
+
+http.listen(3000, () => {
+  console.log("Listening on port 3000");
 });
