@@ -11,7 +11,7 @@ let users = new Map();
 let rooms = new Map();
 
 io.on("connection", (socket) => {
-  users.set(socket.id, new Client("aaa", socket));
+  users.set(socket.id, new Client(socket.handshake.query.name, socket));
   console.log("User connected");
   socket.emit("rooms list", rooms.keys);
   socket.on("message", (data) => {

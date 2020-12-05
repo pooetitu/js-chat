@@ -18,40 +18,12 @@
         </ul>
         <div id="crbut">
           <form>
-            <input type="text" id="roomname"/>
+            <input type="text" id="roomname" />
             <button id="CreateButton">Join</button>
           </form>
         </div>
       </div>
     </div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      var socket = io();
-
-      socket.on("message", (data) => {
-        console.log(data);
-        var text = document.createTextNode(data);
-        var newLine = document.createElement("br");
-        document.getElementById("chatbox").appendChild(text);
-        document.getElementById("chatbox").appendChild(newLine);
-      });
-
-      socket.on("rooms list", (data) => {});
-      document.getElementById("CreateButton").addEventListener("click", (event) => {
-        event.preventDefault();
-        if (document.getElementById("roomname").value != "") {
-          socket.emit("room join", document.getElementById("roomname").value);
-          document.getElementById("roomname").value = "";
-        }
-      });
-      document.getElementById("SendMessage").addEventListener("click", (event) => {
-        event.preventDefault();
-        if (document.getElementById("usermsg").value != "") {
-          socket.emit("message", document.getElementById("usermsg").value);
-          document.getElementById("usermsg").value = "";
-        }
-      });
-    </script>
     <style>
       #block {
         display: flex;
@@ -93,5 +65,42 @@
         padding: 0;
       }
     </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      window.addEventListener("load", function (event) {
+        var username = prompt("Enter your username");
+        var socket = io({ query: `name=${username}` });
+        socket.on("message", (data) => {
+          console.log(data);
+          var text = document.createTextNode(data);
+          var newLine = document.createElement("br");
+          document.getElementById("chatbox").appendChild(text);
+          document.getElementById("chatbox").appendChild(newLine);
+        });
+
+        socket.on("rooms list", (data) => {});
+        document
+          .getElementById("CreateButton")
+          .addEventListener("click", (event) => {
+            event.preventDefault();
+            if (document.getElementById("roomname").value != "") {
+              socket.emit(
+                "room join",
+                document.getElementById("roomname").value
+              );
+              document.getElementById("roomname").value = "";
+            }
+          });
+        document
+          .getElementById("SendMessage")
+          .addEventListener("click", (event) => {
+            event.preventDefault();
+            if (document.getElementById("usermsg").value != "") {
+              socket.emit("message", document.getElementById("usermsg").value);
+              document.getElementById("usermsg").value = "";
+            }
+          });
+      });
+    </script>
   </body>
 </html>
