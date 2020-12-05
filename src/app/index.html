@@ -9,18 +9,17 @@
         <div id="chatbox"></div>
         <form id="form">
           <input id="usermsg" type="text" size="63" />
-          <button id="submit">send</button>
+          <button id="SendMessage">send</button>
         </form>
       </div>
       <div id="roomslist">
         <ul class="list" style="margin-left: 10px; margin-right: 10px">
           <label>Rooms list</label>
-          <li>aaa</li>
         </ul>
         <div id="crbut">
           <form>
-            <input type="text" />
-            <button>Join</button>
+            <input type="text" id="roomname"/>
+            <button id="CreateButton">Join</button>
           </form>
         </div>
       </div>
@@ -38,8 +37,14 @@
       });
 
       socket.on("rooms list", (data) => {});
-
-      document.getElementById("submit").addEventListener("click", (event) => {
+      document.getElementById("CreateButton").addEventListener("click", (event) => {
+        event.preventDefault();
+        if (document.getElementById("roomname").value != "") {
+          socket.emit("room join", document.getElementById("roomname").value);
+          document.getElementById("roomname").value = "";
+        }
+      });
+      document.getElementById("SendMessage").addEventListener("click", (event) => {
         event.preventDefault();
         if (document.getElementById("usermsg").value != "") {
           socket.emit("message", document.getElementById("usermsg").value);
@@ -81,9 +86,6 @@
         text-align: center;
         float: right;
         overflow: auto;
-      }
-      #crbut {
-        
       }
       ul {
         height: 270px;
