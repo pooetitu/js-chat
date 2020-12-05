@@ -4,16 +4,31 @@
     <title>Chat test</title>
   </head>
   <body>
-    <div id="wrapper">
-      <div id="chatbox"></div>
-      <form id="form">
-        <input id="usermsg" type="text" size="63" />
-        <button id="submit">send</button>
-      </form>
+    <div id="block">
+      <div id="wrapper">
+        <div id="chatbox"></div>
+        <form id="form">
+          <input id="usermsg" type="text" size="63" />
+          <button id="submit">send</button>
+        </form>
+      </div>
+      <div id="roomslist">
+        <ul class="list" style="margin-left: 10px; margin-right: 10px">
+          <label>Rooms list</label>
+          <li>aaa</li>
+        </ul>
+        <div id="crbut">
+          <form>
+            <input type="text" />
+            <button>Join</button>
+          </form>
+        </div>
+      </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
+
       socket.on("message", (data) => {
         console.log(data);
         var text = document.createTextNode(data);
@@ -21,6 +36,9 @@
         document.getElementById("chatbox").appendChild(text);
         document.getElementById("chatbox").appendChild(newLine);
       });
+
+      socket.on("rooms list", (data) => {});
+
       document.getElementById("submit").addEventListener("click", (event) => {
         event.preventDefault();
         if (document.getElementById("usermsg").value != "") {
@@ -30,6 +48,10 @@
       });
     </script>
     <style>
+      #block {
+        display: flex;
+        justify-content: center;
+      }
       #chatbox {
         text-align: left;
         margin: 0 auto;
@@ -49,8 +71,24 @@
         border: 1px solid #acd8f0;
       }
       #usermsg {
+        margin: 0 auto;
         width: 395px;
         border: 1px solid #acd8f0;
+      }
+      #roomslist {
+        justify-content: center;
+        border: 1px solid #acd8f0;
+        text-align: center;
+        float: right;
+        overflow: auto;
+      }
+      #crbut {
+        
+      }
+      ul {
+        height: 270px;
+        list-style: none;
+        padding: 0;
       }
     </style>
   </body>
